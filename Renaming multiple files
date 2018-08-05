@@ -1,0 +1,6 @@
+$files = Get-ChildItem -Path C:\Temp #create list of files
+foreach ($file in $files)
+{
+    $newFileName=$file.Name.Replace("A","B")  #replace "A" with "B"
+    Rename-Item $file $newFileName
+}
