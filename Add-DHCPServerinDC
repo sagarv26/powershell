@@ -1,0 +1,47 @@
+$InputPath = 'C:\Temp.csv'
+$Computers = @(Import-CSV $InputPath)
+
+$Yes='Yes'
+$No='No'
+$NAMsg='NotApplicable'
+
+$AllObjects=@()
+$Count=0
+
+Write-Output "There are $($Computers.Count) computers to be authorized"
+Write-Output " "
+Write-Output " "
+
+ForEach ($C in $Computers) {
+    $Count += 1
+    Try {
+        
+        $DNSName = $Null
+        $DNSName = "{0}.{1}" -f $C.ComputerName,$C.Domain
+        Add-DHCPServerinDC -DnsName $DNSName -IPAddress $C.IPAddress -ErrorAction Stop -Verbose
+        
+        $Property = $Null
+        $Property = [Ordered]@{ComputerName=$C.ComputerName;Domain=$C.Domain;IpAddress=$C.IPAddress;SuccessfullyAuthorized=$Yes;ErrorMessage=$NAMsg}
+        $Object = $Null
+        $Object = New-Object PSObject -Property $Property
+        
+        Write-Output "$Count : Successfully authorized $DNSName"
+        Write-Output " "
+    
+    } Catch {
+        
+        $ErrorMessage = $_.exception.Message
+        
+        Write-Output "$Count : Error authorizing $DNSName. ErrorMessage: $ErrorMessage"
+        Write-Output " "
+        
+        $Property = $Null
+        $Property = [Ordered]@{ComputerName=$C.ComputerName;Domain=$C.Domain;IpAddress=$C.IPAddress;SuccessfullyAuthorized=$No;ErrorMessage=$ErrorMessage}
+        $Object = $Null
+        $Object = New-Object PSObject -Property $Property
+        $ErrorMessage = $Null
+      
+      }
+
+    $AllObjects += $Object 
+}
