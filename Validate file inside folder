@@ -1,0 +1,23 @@
+
+$fileToFind="Test1"
+$paths=@("D:\Learnings")
+        
+foreach($path in $paths){
+
+$f=Get-ChildItem $path | 
+
+ForEach-Object{
+
+if($_.BaseName -eq $fileToFind){
+
+Write-Host $fileToFind " directory exist in " $path
+
+}else{
+
+Write-Host $fileToFind " directory is not exist in " $path
+
+}
+
+}
+
+}
