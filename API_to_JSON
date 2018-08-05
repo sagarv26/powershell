@@ -1,0 +1,9 @@
+#If JSON is returned by a web or REpresentational State Transfer (REST) service,
+#Windows PowerShell has a cmdlet that makes it incredibly easy to handle the request and conversion in a couple of lines of script:
+
+$resource='http://localhost:9000/district/allOrder' 
+$a=Invoke-RestMethod -Method Get -Uri $resource
+
+$a
+
+#(Invoke-RestMethod $resource).results 
