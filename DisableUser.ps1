@@ -1,5 +1,5 @@
 
-$path = ''
+$path = ' '
 
 $users = import-csv $path
 
