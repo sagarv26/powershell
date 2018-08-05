@@ -1,0 +1,30 @@
+# Powershell script to create  bulk user upload with a provided CSV file.
+# The OUs need to be existant prior to creation else the script will not create the objects
+# Attachment file needs to be renamed to csv and path need to be updated.
+
+
+#Powershell v2.0
+#v1.0 Initial Script
+
+#Import the Active Directory Module
+Import-module activedirectory 
+
+#Import the list from the user
+$Users = Import-Csv -Path C:\Userlist.csv           
+foreach ($User in $Users)            
+{   $Office         
+    $Displayname =  $User.Lastname + ", " +  $User.Firstname            
+    $UserFirstname = $User.Firstname
+       $UserFirstIntial = $UserFirstname.Substring(1,1)
+       $Usermiddlename = $User.Middlename 
+    $UserLastname = $User.Lastname            
+    $OU = $User.OU
+    $SAM = $User.SAM       
+    $UPN = $UserFirstname.Substring(1,1) + $User.Lastname + "@" + $User.Maildomain            
+    $Description = $User.Description            
+    $Password = $User.Password
+	
+	#Creation of the account with the requested formatting.
+    New-ADUser -Name "$Displayname" -DisplayName "$Displayname" -SamAccountName $SAM -Office "Office"  -UserPrincipalName $UPN -GivenName "$UserFirstname" -Surname "$UserLastname" -Description "$Description" -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path "$OU" -ChangePasswordAtLogon $True –PasswordNeverExpires $false -server server.domain.local            
+       $Displayname
+}
