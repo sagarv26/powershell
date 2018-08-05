@@ -1,4 +1,4 @@
-﻿
+
 #number of elements to generate in a series
 $limit=20
 
