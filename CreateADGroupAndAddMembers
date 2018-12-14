@@ -1,0 +1,43 @@
+
+
+
+#Get Content from CSV
+$Info=Import-Csv 'C:\Input.csv' 
+
+$Object=@()
+foreach($group in $groups){
+
+  try{
+
+  #Creating Group
+  New-ADGroup TestGroup -Path "ou=TestOU,DC=test,DC=com" -GroupScope Global -GroupCategory Security
+
+  #AddingMember
+  Add-ADGroupMember TestGroup -Members $group.members
+
+  $Property=@{
+  Group=$group.name;
+  Status='created'
+  }
+  }
+
+  catch{
+
+  $errormessage = $_.exception.message
+  
+  $Property=@{
+  Group=$group.name;
+  Status=$errormessage
+  }
+  
+  }
+
+  $Object+=New-Object PSObject -Property $Property
+
+    
+
+}
+
+$Object | export-csv c:\output.csv -NoTypeInformation
+
+
