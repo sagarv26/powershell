@@ -1,0 +1,4 @@
+##Get User from Disabled OU
+
+Get-ADUser -Filter * -SearchBase "OU=Disabled Users,DC=com" -Properties  SamAccountName, memberof, comment |
+Select SamAccountName, @{n='MemberOf';e={$_.memberof}}, comment | Export-Csv C:\Output\AllUserList.csv -NoTypeInformation
