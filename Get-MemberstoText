@@ -1,0 +1,18 @@
+$group="Group"
+$groupUsers=Get-ADGroup -Identity $group -Properties * 
+$mem=$groupUsers.Members
+$managedBy=$groupUsers.managedBy
+$group +" | "+ $managedBy +" | " + $mem >> C:\grpUser.txt
+
+foreach($m in $mem){
+
+$type=(Get-ADObject -Filter {DistinguishedName -eq $m}).objectclass
+
+if($type -eq "user"){
+
+$user=get-aduser -Filter {DistinguishedName -eq $m} -Properties * 
+$user.samaccountname +"," >> C:\\grpUser.txt
+}
+
+}
+#"`r`n" >> C:\\grpUser.txt
