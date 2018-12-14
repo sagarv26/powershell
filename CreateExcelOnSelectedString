@@ -1,0 +1,40 @@
+$ExcelFile='C:\test.xlsx'
+$outputPath='C:\output\Test\'
+
+$excelApp = New-Object -ComObject Excel.Application 
+$excelApp.DisplayAlerts = $false 
+     
+$workbook = $excelApp.Workbooks.Open($ExcelFile) 
+$csvFilePath = $ExcelFile -replace "\.xlsx$", ".csv" 
+$workbook.SaveAs($csvFilePath, [Microsoft.Office.Interop.Excel.XlFileFormat]::xlCSV) 
+$workbook.Close() 
+
+$sheet=Import-Csv $csvFilePath
+
+$lead=@()
+foreach($d in $sheet){
+
+$lead+=$d.'Project Lead'
+
+}
+
+$total=$lead |Select-Object -Unique
+
+
+for($i=0;$i -le $total.Count-1;$i++){
+
+"Project Lead: "+$total[$i]
+foreach($s in $sheet){
+
+if($total[$i].Equals($s.'Project Lead')){
+
+$path=$outputPath+'{0}.csv' -f $total[$i]
+
+$s | Export-Csv $path -Append -NoTypeInformation
+
+}
+
+}
+
+
+}
