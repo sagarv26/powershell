@@ -1,0 +1,11 @@
+Import-module ActiveDirectory
+
+$Move = Get-Content D:\Temp\Groups.txt
+$OU = ""
+
+
+foreach ($Group in $Groups){
+
+    get-adgroup $Group | move-adobject -targetpath $OU
+
+}
