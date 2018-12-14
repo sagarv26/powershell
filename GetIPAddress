@@ -1,0 +1,10 @@
+$machines=Get-Content C:\uid.txt
+
+
+foreach($mac in $machines){
+
+$ip=nslookup $mac 2> $null | select-string -pattern "Address:" | select-string -NotMatch "10.0.1.1"
+
+$mac + " | " + $ip >> C:\IPinfoNew.txt
+
+}
