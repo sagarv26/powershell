@@ -1,0 +1,17 @@
+<#DS Config File
+
+opendj\config\config.ldif
+
+#>
+
+# Retrive General Details about DS:
+
+status.bat --bindDn "cn=Directory Manager"  --bindPassword password  --hostname ""  --port 5444 -trustAll
+
+status.bat --bindDn "cn=Directory Manager"  --bindPassword password  --hostname ""  --port 5444 -trustAll >> C:\DS_Details.txt
+
+# Fetch all the users from DS and export to LDIF
+	
+ldapsearch.bat --port 1389 --baseDN dc=example,dc=com --bindDn "cn=Directory Manager"  --bindPassword password  "(uid=*)" >> C:\Test.ldif
+
+
